@@ -590,61 +590,107 @@ input[type=range] { flex: 1; min-width: 120px; accent-color: var(--accent); curs
   <h2>When does <span class="grad">more = better?</span></h2>
   <p class="lead">Scaling laws describe how training loss decreases as data, parameters, or compute increase. PINNs and NNs follow different scaling curves — they cross at a regime boundary — and PINNs plateau earlier in the high-data regime due to training stiffness from competing loss gradients.</p>
   <div style="margin-top:36px;padding-bottom:8px">
-    <svg viewBox="0 0 740 260" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:260px">
-      <text x="12" y="130" fill="rgba(110,138,173,0.6)" font-size="10" font-family="monospace" transform="rotate(-90,12,130)" text-anchor="middle">Training Loss</text>
-      <line x1="30" y1="10" x2="30" y2="215" stroke="rgba(110,138,173,0.2)" stroke-width="1"/>
-      <line x1="30" y1="215" x2="730" y2="215" stroke="rgba(110,138,173,0.2)" stroke-width="1"/>
-      <text x="720" y="210" fill="rgba(110,138,173,0.6)" font-size="10" font-family="monospace" text-anchor="end">Data / Compute →</text>
-      <path d="M 30,200 C 90,175 170,125 280,80 S 490,43 730,30" fill="none" stroke="#00e5ff" stroke-width="3" stroke-linecap="round"/>
-      <path d="M 30,155 C 90,105 170,70 290,53 S 430,47 550,45 S 670,44 730,44" fill="none" stroke="#ff6b35" stroke-width="3" stroke-linecap="round" stroke-dasharray="8 4"/>
-      <circle cx="284" cy="77" r="7" fill="none" stroke="#a259ff" stroke-width="2"/>
-      <line x1="284" y1="84" x2="284" y2="112" stroke="#a259ff" stroke-width="1" stroke-dasharray="3 2"/>
-      <text x="222" y="126" fill="#a259ff" font-size="11" font-family="monospace">← NN takes over here</text>
-      <text x="490" y="59" fill="#ff6b35" font-size="10" font-family="monospace">PINN plateaus (stiff loss)</text>
-      <text x="560" y="90" fill="#00e5ff" font-size="10" font-family="monospace">NN keeps improving →</text>
-      <rect x="34" y="14" width="220" height="44" rx="4" fill="rgba(0,0,0,0.3)"/>
-      <line x1="44" y1="30" x2="76" y2="30" stroke="#00e5ff" stroke-width="3"/>
-      <text x="84" y="34" fill="#00e5ff" font-size="11" font-family="monospace">NN (data-driven)</text>
-      <line x1="44" y1="48" x2="76" y2="48" stroke="#ff6b35" stroke-width="3" stroke-dasharray="6 3"/>
-      <text x="84" y="52" fill="#ff6b35" font-size="11" font-family="monospace">PINN (physics-informed)</text>
-      <rect x="34" y="220" width="114" height="16" rx="3" fill="rgba(0,229,255,0.06)"/>
-      <text x="40" y="232" fill="rgba(0,229,255,0.6)" font-size="10" font-family="monospace">← low-data regime</text>
-      <rect x="610" y="220" width="116" height="16" rx="3" fill="rgba(255,107,53,0.06)"/>
-      <text x="616" y="232" fill="rgba(255,107,53,0.6)" font-size="10" font-family="monospace">high-data regime →</text>
-      <!-- Literature data points on NN curve -->
-      <!-- GPT-3 regime: large compute, low loss -->
-      <circle cx="620" cy="33" r="5" fill="#00e5ff" opacity="0.85"/>
-      <text x="626" y="30" fill="#00e5ff" font-size="9" font-family="monospace">GPT-3 / Chinchilla</text>
-      <text x="626" y="39" fill="rgba(0,229,255,0.55)" font-size="8" font-family="monospace">~1T tokens, L∝N⁻⁰·⁰⁷⁶</text>
-      <!-- Mid-scale NN -->
-      <circle cx="420" cy="48" r="5" fill="#00e5ff" opacity="0.85"/>
-      <text x="426" y="45" fill="#00e5ff" font-size="9" font-family="monospace">BERT-large</text>
-      <text x="426" y="54" fill="rgba(0,229,255,0.55)" font-size="8" font-family="monospace">3.3B tokens</text>
-      <!-- PINN plateau point -->
-      <circle cx="510" cy="45" r="5" fill="#ff6b35" opacity="0.85"/>
-      <text x="434" y="38" fill="#ff6b35" font-size="9" font-family="monospace">PINN plateau</text>
-      <text x="434" y="47" fill="rgba(255,107,53,0.6)" font-size="8" font-family="monospace">Wang et al. 2021</text>
-      <!-- Low-data PINN advantage -->
-      <circle cx="110" cy="105" r="5" fill="#ff6b35" opacity="0.85"/>
-      <text x="116" y="102" fill="#ff6b35" font-size="9" font-family="monospace">PINN (sparse BCs)</text>
-      <text x="116" y="111" fill="rgba(255,107,53,0.6)" font-size="8" font-family="monospace">Raissi et al. 2019</text>
-      <!-- Low-data NN struggles -->
-      <circle cx="110" cy="175" r="5" fill="#00e5ff" opacity="0.85"/>
-      <text x="116" y="172" fill="#00e5ff" font-size="9" font-family="monospace">NN overfits</text>
-      <text x="116" y="181" fill="rgba(0,229,255,0.55)" font-size="8" font-family="monospace">&lt;1k samples</text>
-      <!-- Axis tick labels -->
-      <text x="30" y="212" fill="rgba(110,138,173,0.5)" font-size="9" font-family="monospace" text-anchor="middle">10²</text>
-      <text x="180" y="212" fill="rgba(110,138,173,0.5)" font-size="9" font-family="monospace" text-anchor="middle">10⁴</text>
-      <text x="380" y="212" fill="rgba(110,138,173,0.5)" font-size="9" font-family="monospace" text-anchor="middle">10⁶</text>
-      <text x="580" y="212" fill="rgba(110,138,173,0.5)" font-size="9" font-family="monospace" text-anchor="middle">10⁹</text>
-      <text x="720" y="212" fill="rgba(110,138,173,0.5)" font-size="9" font-family="monospace" text-anchor="middle">10¹²</text>
-      <text x="30" y="200" fill="rgba(110,138,173,0.4)" font-size="9" font-family="monospace" text-anchor="middle">1.0</text>
-      <text x="30" y="155" fill="rgba(110,138,173,0.4)" font-size="9" font-family="monospace" text-anchor="middle">0.5</text>
-      <text x="30" y="80"  fill="rgba(110,138,173,0.4)" font-size="9" font-family="monospace" text-anchor="middle">0.1</text>
-      <text x="30" y="35"  fill="rgba(110,138,173,0.4)" font-size="9" font-family="monospace" text-anchor="middle">0.01</text>
-    </svg>
+    <svg viewBox="0 0 760 320" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:320px">
+
+  <!-- CHART AREA: x=60..730, y=15..185 | ANNOTATION ZONE: y=205..310 -->
+
+  <!-- Axes -->
+  <line x1="60" y1="12" x2="60"  y2="187" stroke="rgba(110,138,173,0.35)" stroke-width="1.5"/>
+  <line x1="58" y1="185" x2="732" y2="185" stroke="rgba(110,138,173,0.35)" stroke-width="1.5"/>
+
+  <!-- Y-axis label: rotated in left margin, x=11 keeps it away from tick labels -->
+  <text x="11" y="100" fill="rgba(110,138,173,0.65)" font-size="10" font-family="monospace"
+        transform="rotate(-90,11,100)" text-anchor="middle">Training Loss &#x2193;</text>
+
+  <!-- Y-axis tick labels: text-anchor=end, right-aligned to x=55, no overlap with label at x=11 -->
+  <line x1="57" y1="15"  x2="62" y2="15"  stroke="rgba(110,138,173,0.3)" stroke-width="1"/>
+  <text x="55" y="19"  fill="rgba(110,138,173,0.55)" font-size="9" font-family="monospace" text-anchor="end">low</text>
+  <line x1="57" y1="97"  x2="62" y2="97"  stroke="rgba(110,138,173,0.3)" stroke-width="1"/>
+  <text x="55" y="101" fill="rgba(110,138,173,0.55)" font-size="9" font-family="monospace" text-anchor="end">mid</text>
+  <line x1="57" y1="183" x2="62" y2="183" stroke="rgba(110,138,173,0.3)" stroke-width="1"/>
+  <text x="55" y="183" fill="rgba(110,138,173,0.55)" font-size="9" font-family="monospace" text-anchor="end">high</text>
+
+  <!-- Grid -->
+  <line x1="60" y1="97"  x2="730" y2="97"  stroke="rgba(110,138,173,0.07)" stroke-width="1" stroke-dasharray="4,4"/>
+  <line x1="60" y1="15"  x2="730" y2="15"  stroke="rgba(110,138,173,0.07)" stroke-width="1" stroke-dasharray="4,4"/>
+  <line x1="175" y1="12" x2="175" y2="185" stroke="rgba(110,138,173,0.06)" stroke-width="1" stroke-dasharray="4,4"/>
+  <line x1="360" y1="12" x2="360" y2="185" stroke="rgba(110,138,173,0.06)" stroke-width="1" stroke-dasharray="4,4"/>
+  <line x1="502" y1="12" x2="502" y2="185" stroke="rgba(110,138,173,0.06)" stroke-width="1" stroke-dasharray="4,4"/>
+
+  <!-- X-axis ticks -->
+  <text x="60"  y="198" fill="rgba(110,138,173,0.55)" font-size="9" font-family="monospace" text-anchor="middle">10&#xB2;</text>
+  <text x="175" y="198" fill="rgba(110,138,173,0.55)" font-size="9" font-family="monospace" text-anchor="middle">10&#x2074;</text>
+  <text x="292" y="198" fill="rgba(110,138,173,0.55)" font-size="9" font-family="monospace" text-anchor="middle">10&#x2076;</text>
+  <text x="502" y="198" fill="rgba(110,138,173,0.55)" font-size="9" font-family="monospace" text-anchor="middle">10&#x2079;</text>
+  <text x="712" y="198" fill="rgba(110,138,173,0.55)" font-size="9" font-family="monospace" text-anchor="middle">10&#xB9;&#xB2;</text>
+  <text x="726" y="180" fill="rgba(110,138,173,0.55)" font-size="9" font-family="monospace" text-anchor="end">Data / Compute &#x2192;</text>
+
+  <!-- NN curve: high loss -> drops steeply -> keeps falling -->
+  <path d="M 60,183 C 110,168 155,140 175,128 C 210,108 250,88 292,73
+           C 340,57 400,44 460,36 C 530,28 620,24 730,21"
+        fill="none" stroke="#00e5ff" stroke-width="3" stroke-linecap="round"/>
+
+  <!-- PINN curve: starts lower -> drops -> plateaus -->
+  <path d="M 60,155 C 100,128 140,102 175,90 C 215,77 258,63 292,57
+           C 340,50 390,43 440,40 C 510,38 590,38 730,38"
+        fill="none" stroke="#ff6b35" stroke-width="3" stroke-linecap="round" stroke-dasharray="9,5"/>
+
+  <!-- Crossover marker: only text element inside chart -->
+  <circle cx="292" cy="65" r="7" fill="none" stroke="#a259ff" stroke-width="2"/>
+  <line x1="292" y1="72" x2="292" y2="88" stroke="#a259ff" stroke-width="1" stroke-dasharray="3,2"/>
+  <text x="298" y="101" fill="#a259ff" font-size="9" font-family="monospace">NN overtakes PINN</text>
+
+  <!-- PINN plateau + NN improving moved to annotation zone below -->
+
+  <!-- Legend: opaque background box -->
+  <rect x="64" y="14" width="218" height="44" rx="4" fill="rgba(6,9,16,0.82)"/>
+  <line x1="74" y1="30" x2="104" y2="30" stroke="#00e5ff" stroke-width="3"/>
+  <text x="112" y="34" fill="#00e5ff" font-size="10" font-family="monospace">NN (data-driven)</text>
+  <line x1="74" y1="48" x2="104" y2="48" stroke="#ff6b35" stroke-width="3" stroke-dasharray="7,4"/>
+  <text x="112" y="52" fill="#ff6b35" font-size="10" font-family="monospace">PINN (physics-informed)</text>
+
+  <!-- Data point dots (no labels inside chart) -->
+  <circle cx="118" cy="112" r="5" fill="#ff6b35" opacity="0.9"/>
+  <line x1="118" y1="117" x2="118" y2="185" stroke="rgba(255,107,53,0.2)" stroke-width="1" stroke-dasharray="2,3"/>
+  <circle cx="118" cy="168" r="5" fill="#00e5ff" opacity="0.9"/>
+  <line x1="118" y1="173" x2="118" y2="185" stroke="rgba(0,229,255,0.2)" stroke-width="1" stroke-dasharray="2,3"/>
+  <circle cx="430" cy="40" r="5" fill="#ff6b35" opacity="0.9"/>
+  <line x1="430" y1="45" x2="430" y2="185" stroke="rgba(255,107,53,0.2)" stroke-width="1" stroke-dasharray="2,3"/>
+  <circle cx="560" cy="25" r="5" fill="#00e5ff" opacity="0.9"/>
+  <line x1="560" y1="30" x2="560" y2="185" stroke="rgba(0,229,255,0.2)" stroke-width="1" stroke-dasharray="2,3"/>
+  <circle cx="712" cy="22" r="5" fill="#00e5ff" opacity="0.9"/>
+  <line x1="712" y1="27" x2="712" y2="185" stroke="rgba(0,229,255,0.2)" stroke-width="1" stroke-dasharray="2,3"/>
+
+  <!-- ═══════════════════════════════════════════════
+       ANNOTATION ZONE (y >= 207) - zero overlap with chart
+       ═══════════════════════════════════════════════ -->
+
+  <!-- Regime labels -->
+  <rect x="62"  y="205" width="116" height="14" rx="3" fill="rgba(0,229,255,0.05)"/>
+  <text x="68"  y="215" fill="rgba(0,229,255,0.6)"  font-size="9" font-family="monospace">&#x2190; low-data regime</text>
+  <rect x="614" y="205" width="116" height="14" rx="3" fill="rgba(255,107,53,0.05)"/>
+  <text x="620" y="215" fill="rgba(255,107,53,0.6)" font-size="9" font-family="monospace">high-data regime &#x2192;</text>
+
+  <!-- Behaviour notes (moved from inside chart) -->
+  <text x="62" y="228" fill="rgba(255,107,53,0.75)" font-size="9" font-family="monospace" font-style="italic">PINN plateau (stiff gradients) at high data — NN keeps improving</text>
+
+  <!-- Data point labels — col left -->
+  <circle cx="80" cy="242" r="4" fill="#ff6b35" opacity="0.85"/>
+  <text x="88" y="246" fill="#ff6b35" font-size="9" font-family="monospace">PINN sparse BCs · Raissi et al. 2019</text>
+  <circle cx="80" cy="258" r="4" fill="#00e5ff" opacity="0.85"/>
+  <text x="88" y="262" fill="#00e5ff" font-size="9" font-family="monospace">NN overfits · &lt;1k samples</text>
+
+  <!-- Data point labels — col right -->
+  <circle cx="400" cy="242" r="4" fill="#ff6b35" opacity="0.85"/>
+  <text x="408" y="246" fill="#ff6b35" font-size="9" font-family="monospace">PINN plateau · Wang et al. 2021</text>
+  <circle cx="400" cy="258" r="4" fill="#00e5ff" opacity="0.85"/>
+  <text x="408" y="262" fill="#00e5ff" font-size="9" font-family="monospace">BERT-large · 3.3B tokens</text>
+  <circle cx="400" cy="274" r="4" fill="#00e5ff" opacity="0.85"/>
+  <text x="408" y="278" fill="#00e5ff" font-size="9" font-family="monospace">GPT-3 / Chinchilla · ~1T tokens · L&#x221D;N&#x207B;&#x2070;&#xB7;&#x2070;&#x2077;&#x2076;</text>
+
+</svg>
     <div style="font-family:'Space Mono',monospace;font-size:10px;color:rgba(110,138,173,0.5);margin-top:8px;text-align:center">
-      ● Literature data points anchored to published results (Raissi et al. 2019; Hoffmann et al. 2022 Chinchilla; Wang et al. 2021). Curve shapes are schematic — y-axis is normalised loss (log scale conceptual). x-axis: training tokens / collocation points.
+      ● Literature data points anchored to published results (Raissi et al. 2019; Hoffmann et al. 2022 Chinchilla; Wang et al. 2021). Both axes log-scale (conceptual). PINN starts with lower loss in the low-data regime; NN overtakes as data scales.
     </div>
   </div>
   <div class="insight-row">
